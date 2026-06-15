@@ -503,9 +503,8 @@ function renderDoubanCards(data, container) {
             
             // 处理图片URL — 直接走代理绕过防盗链
             const originalCoverUrl = item.cover;
-            // v=2 用于清除浏览器缓存的损坏图片
             const proxiedCoverUrl = originalCoverUrl.startsWith('http')
-                ? PROXY_URL + encodeURIComponent(originalCoverUrl) + '&v=2' : originalCoverUrl;
+                ? PROXY_URL + encodeURIComponent(originalCoverUrl) : originalCoverUrl;
 
             // 为不同设备优化卡片布局
             card.innerHTML = `
