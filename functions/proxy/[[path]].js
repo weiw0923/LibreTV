@@ -17,6 +17,8 @@ const MEDIA_FILE_EXTENSIONS = [
     '.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.tiff', '.svg', '.avif', '.heic'
 ];
 const MEDIA_CONTENT_TYPES = ['video/', 'audio/', 'image/'];
+// 图片文件扩展名（用于跳过鉴权，让海报正常显示）
+const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.tiff', '.svg', '.avif', '.heic'];
 // --- 常量结束 ---
 
 
@@ -28,21 +30,32 @@ export async function onRequest(context) {
     const { request, env, next, waitUntil } = context; // next 和 waitUntil 可能需要
     const url = new URL(request.url);
 
-    // 验证鉴权（主函数调用）
-    const isValidAuth = await validateAuth(request, env);
-    if (!isValidAuth) {
-        return new Response(JSON.stringify({
-            success: false,
-            error: '代理访问未授权：请检查密码配置或鉴权参数'
-        }), { 
-            status: 401,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS',
-                'Access-Control-Allow-Headers': '*',
-                'Content-Type': 'application/json'
-            }
-        });
+    // 图片请求跳过鉴权（海报防盗链问题）
+    const targetPath = decodeURIComponent(url.pathname.replace(/^\/proxy\//, ''));
+    const isImageRequest = IMAGE_EXTENSIONS.some(ext => {
+        const pathLower = targetPath.toLowerCase();
+        // 检查路径末尾或 ? 参数前的扩展名
+        const pathWithoutQuery = pathLower.split('?')[0];
+        return pathWithoutQuery.endsWith(ext);
+    });
+
+    if (!isImageRequest) {
+        // 验证鉴权（主函数调用）
+        const isValidAuth = await validateAuth(request, env);
+        if (!isValidAuth) {
+            return new Response(JSON.stringify({
+                success: false,
+                error: '代理访问未授权：请检查密码配置或鉴权参数'
+            }), {
+                status: 401,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS',
+                    'Access-Control-Allow-Headers': '*',
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
     }
 
     // --- 从环境变量读取配置 ---
@@ -116,17 +129,7 @@ export async function onRequest(context) {
         return true;
     }
 
-    // 验证鉴权（主函数调用）
-    if (!validateAuth(request, env)) {
-        return new Response('Unauthorized', { 
-            status: 401,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS',
-                'Access-Control-Allow-Headers': '*'
-            }
-        });
-    }
+    // 验证鉴权已在函数开头处理
 
     // 输出调试日志 (需要设置 DEBUG: true 环境变量)
     function logDebug(message) {
