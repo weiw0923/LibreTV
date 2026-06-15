@@ -445,57 +445,30 @@ async function fetchDoubanData(url) {
     // 添加超时控制
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
-    
-    // 设置请求选项，包括信号和头部
+
+    // 设置请求选项
     const fetchOptions = {
         signal: controller.signal,
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-            'Referer': 'https://movie.douban.com/',
             'Accept': 'application/json, text/plain, */*',
         }
     };
 
     try {
-        // 添加鉴权参数到代理URL
-        const proxiedUrl = await window.ProxyAuth?.addAuthToProxyUrl ? 
-            await window.ProxyAuth.addAuthToProxyUrl(PROXY_URL + encodeURIComponent(url)) :
-            PROXY_URL + encodeURIComponent(url);
-            
-        // 尝试直接访问（豆瓣API可能允许部分CORS请求）
+        // 直接走代理（不需要添加鉴权，Worker 会放行 douban 域名）
+        const proxiedUrl = PROXY_URL + encodeURIComponent(url);
         const response = await fetch(proxiedUrl, fetchOptions);
         clearTimeout(timeoutId);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        
+
         return await response.json();
     } catch (err) {
-        console.error("豆瓣 API 请求失败（直接代理）：", err);
-        
-        // 失败后尝试备用方法：作为备选
-        const fallbackUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-        
-        try {
-            const fallbackResponse = await fetch(fallbackUrl);
-            
-            if (!fallbackResponse.ok) {
-                throw new Error(`备用API请求失败! 状态: ${fallbackResponse.status}`);
-            }
-            
-            const data = await fallbackResponse.json();
-            
-            // 解析原始内容
-            if (data && data.contents) {
-                return JSON.parse(data.contents);
-            } else {
-                throw new Error("无法获取有效数据");
-            }
-        } catch (fallbackErr) {
-            console.error("豆瓣 API 备用请求也失败：", fallbackErr);
-            throw fallbackErr; // 向上抛出错误，让调用者处理
-        }
+        console.error("豆瓣 API 请求失败：", err);
+        throw err;
     }
 }
 
