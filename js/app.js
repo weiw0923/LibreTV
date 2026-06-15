@@ -746,7 +746,7 @@ async function search() {
             // 修改为水平卡片布局，图片在左侧，文本在右侧，并优化样式
             // 海报走代理以解决防盗链问题
             const rawPic = item.vod_pic || '';
-            const proxyPic = rawPic.startsWith('http') ? PROXY_URL + encodeURIComponent(rawPic) : rawPic;
+            const proxyPic = rawPic.startsWith('http') ? PROXY_URL + '?url=' + encodeURIComponent(rawPic) : rawPic;
             const hasCover = !!proxyPic;
 
             return `
@@ -757,7 +757,7 @@ async function search() {
                         <div class="relative flex-shrink-0 search-card-img-container">
                             <img src="${proxyPic}" alt="${safeName}"
                                  class="h-full w-full object-cover transition-transform hover:scale-110"
-                                 onerror="this.onerror=null; this.style.display='none';"
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 150%22%3E%3Crect fill=%22%23222%22 width=%22100%22 height=%22150%22/%3E%3Ctext x=%2250%22 y=%2275%22 text-anchor=%22middle%22 fill=%22%23666%22 font-size=%2212%22%3E暂无封面%3C/text%3E%3C/svg%3E';"
                                  loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
                         </div>` : ''}
