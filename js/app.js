@@ -746,7 +746,7 @@ async function search() {
             // 修改为水平卡片布局，图片在左侧，文本在右侧，并优化样式
             // 海报走代理以解决防盗链问题
             const rawPic = item.vod_pic || '';
-            const proxyPic = rawPic.startsWith('http') ? PROXY_URL + '?url=' + encodeURIComponent(rawPic) : rawPic;
+            const proxyPic = rawPic.startsWith('http') ? PROXY_URL + encodeURIComponent(rawPic) : rawPic;
             const hasCover = !!proxyPic;
 
             return `
