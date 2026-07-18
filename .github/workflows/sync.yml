@@ -4,8 +4,8 @@ permissions:
   contents: write
 
 on:
-  schedule:
-    - cron: "0 4 * * *" # At 12PM UTC+8
+  # 定时同步已停用：避免每日自动 pull 上游时覆盖 js/config.js 的自定义 29 源。
+  # 需要拉上游更新时，到 Actions → Upstream Sync → Run workflow 手动触发。
   workflow_dispatch:
 
 jobs:
