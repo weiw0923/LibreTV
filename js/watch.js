@@ -66,7 +66,8 @@ window.onload = function() {
     let returnUrl = '';
     if (backUrl) {
         // 有显式指定的返回URL
-        returnUrl = decodeURIComponent(backUrl);
+        // currentParams.get('back') 已解码一次,不能再 decodeURIComponent(否则二次解码)
+        returnUrl = backUrl;
     } else if (referrer && (referrer.includes('/s=') || referrer.includes('?s='))) {
         // 来源是搜索页面
         returnUrl = referrer;
@@ -83,7 +84,9 @@ window.onload = function() {
 
     // 将返回URL添加到player.html的参数中
     if (!playerUrlObj.searchParams.has('returnUrl')) {
-        playerUrlObj.searchParams.set('returnUrl', encodeURIComponent(returnUrl));
+        // searchParams.set 本身会编码,不要再 encodeURIComponent(否则双重编码,
+        // goBack 端 urlParams.get 只解一次会拿到还编码着的值 -> 当相对路径解析 -> 404)
+        playerUrlObj.searchParams.set('returnUrl', returnUrl);
     }
     
     // 同时保存在localStorage中，作为备用
