@@ -6,9 +6,13 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   bump-version:
-    if: github.repository == 'LibreSpark/LibreTV'
+    if: github.repository == 'weiw0923/LibreTV'
     runs-on: ubuntu-latest
     env:
       TZ: 'Asia/Shanghai'
@@ -18,13 +22,18 @@ jobs:
       uses: actions/checkout@v4
     - name: Bump version and commit changes
       run: |
-        CURRENT_TIME=$(date +"%Y-%m-%d %H:%M")
         git config user.name 'github-actions[bot]'
         git config user.email 'github-actions[bot]@users.noreply.github.com'
         echo $(date +"%Y%m%d%H%M") > VERSION.txt
-        git add VERSION.txt
-        git commit -m "Auto Update $CURRENT_TIME"
-        git push origin main
+        # VERSION.txt 未变化(同分钟内重复 push)时跳过,避免 "nothing to commit" 报错
+        if ! git diff --quiet VERSION.txt; then
+          CURRENT_TIME=$(date +"%Y-%m-%d %H:%M")
+          git add VERSION.txt
+          git commit -m "Auto Update $CURRENT_TIME"
+          git push origin main
+        else
+          echo "VERSION.txt 未变化, 跳过提交"
+        fi
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
