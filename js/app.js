@@ -656,6 +656,17 @@ async function search() {
             }
         });
 
+        // 相关性过滤：只保留标题包含搜索关键词的结果。
+        // 标准苹果CMS的 wd= 本就是标题子串匹配，正常源不受影响；
+        // 但部分源搜索实现差（模糊匹配/搜不到就推热门），会返回与关键词无关的结果，这里按标题过滤掉。
+        if (query) {
+            const qLower = query.toLowerCase().trim();
+            allResults = allResults.filter(item => {
+                const name = (item.vod_name || '').toString().toLowerCase();
+                return name.includes(qLower);
+            });
+        }
+
         // 对搜索结果进行排序：按名称优先，名称相同时按接口源排序
         allResults.sort((a, b) => {
             // 首先按照视频名称排序
