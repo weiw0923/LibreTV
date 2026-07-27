@@ -40,26 +40,34 @@ async function checkForUpdates() {
             PROXY: 'https://ghfast.top/raw.githubusercontent.com/weiw0923/LibreTV/main/VERSION.txt',
             DIRECT: 'https://raw.githubusercontent.com/weiw0923/LibreTV/main/VERSION.txt'
         };
-        const FETCH_TIMEOUT = 1500;
-        
+        const FETCH_TIMEOUT = 3000;
+
+        // Worker 部署下 /VERSION.txt 与 raw 上的 VERSION.txt 同源同文件, current 与
+        // latest 恒相等, "发现新版"本就不会触发。这里取 latest 只为兼容构建烤入版本号的
+        // 部署; 取失败时退化成 current 不再抛错, 避免页脚反复显示"版本: 检测失败"
+        // (国内浏览器直连 raw.githubusercontent.com 常超时)。
         try {
             // 尝试使用代理URL获取最新版本
             const proxyPromise = fetchVersion(VERSION_URL.PROXY, '代理请求失败');
-            const timeoutPromise = new Promise((_, reject) => 
+            const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('代理请求超时')), FETCH_TIMEOUT)
             );
-            
+
             latestVersion = await Promise.race([proxyPromise, timeoutPromise]);
             console.log('通过代理服务器获取版本成功');
         } catch (error) {
             console.log('代理请求失败，尝试直接请求:', error.message);
             try {
-                // 代理失败后尝试直接获取
-                latestVersion = await fetchVersion(VERSION_URL.DIRECT, '获取最新版本失败');
+                // 代理失败后尝试直接获取 (同样加超时, 避免直连 raw 挂死)
+                const directPromise = fetchVersion(VERSION_URL.DIRECT, '获取最新版本失败');
+                const directTimeout = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('直接请求超时')), FETCH_TIMEOUT)
+                );
+                latestVersion = await Promise.race([directPromise, directTimeout]);
                 console.log('直接请求获取版本成功');
             } catch (directError) {
-                console.error('所有版本检查请求均失败:', directError);
-                throw new Error('无法获取最新版本信息');
+                console.log('获取最新版本失败, 退化成当前版本:', directError.message);
+                latestVersion = currentVersion;
             }
         }
         
