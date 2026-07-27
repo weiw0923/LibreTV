@@ -1,35 +1,54 @@
 const selectedAPIs = JSON.parse(localStorage.getItem('selectedAPIs') || '[]');
 const customAPIs = JSON.parse(localStorage.getItem('customAPIs') || '[]'); // 存储自定义API列表
 
+// 将 /s=keyword 路径形式的搜索URL规范化为 /?s=keyword 查询串形式。
+// 原因: CF Worker 把 /s=xxx 当作静态文件去 GitHub raw 拉取 -> 404 "Not Found";
+// 而 / 永远返回 index.html,前端 index-page.js 会读取 ?s= 并自动重新执行搜索。
+function normalizeSearchUrl(rawUrl) {
+    if (!rawUrl) return rawUrl;
+    try {
+        const u = new URL(rawUrl, window.location.origin);
+        if (u.pathname.startsWith('/s=')) {
+            const keyword = decodeURIComponent(u.pathname.slice(3));
+            u.pathname = '/';
+            u.searchParams.set('s', keyword);
+            return u.toString();
+        }
+    } catch (e) {
+        // 解析失败则原样返回
+    }
+    return rawUrl;
+}
+
 // 改进返回功能
 function goBack(event) {
     // 防止默认链接行为
     if (event) event.preventDefault();
-    
+
     // 1. 优先检查URL参数中的returnUrl
     const urlParams = new URLSearchParams(window.location.search);
     const returnUrl = urlParams.get('returnUrl');
-    
+
     if (returnUrl) {
-        // 如果URL中有returnUrl参数，优先使用
-        window.location.href = decodeURIComponent(returnUrl);
+        // URLSearchParams.get() 已解码一次,不能再 decodeURIComponent(否则二次解码会破坏含%的关键词)
+        window.location.href = normalizeSearchUrl(returnUrl);
         return;
     }
-    
+
     // 2. 检查localStorage中保存的lastPageUrl
     const lastPageUrl = localStorage.getItem('lastPageUrl');
     if (lastPageUrl && lastPageUrl !== window.location.href) {
-        window.location.href = lastPageUrl;
+        window.location.href = normalizeSearchUrl(lastPageUrl);
         return;
     }
-    
+
     // 3. 检查是否是从搜索页面进入的播放器
     const referrer = document.referrer;
-    
+
     // 检查 referrer 是否包含搜索参数
     if (referrer && (referrer.includes('/s=') || referrer.includes('?s='))) {
         // 如果是从搜索页面来的，返回到搜索页面
-        window.location.href = referrer;
+        window.location.href = normalizeSearchUrl(referrer);
         return;
     }
     

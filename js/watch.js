@@ -1,4 +1,24 @@
 // 获取当前URL的参数，并将它们传递给player.html
+
+// 将 /s=keyword 路径形式的搜索URL规范化为 /?s=keyword 查询串形式。
+// 原因: CF Worker 把 /s=xxx 当静态文件去 GitHub raw 拉取 -> 404; / 永远返回 index.html,
+// 前端 index-page.js 会读取 ?s= 自动重搜。规范化后 lastPageUrl / returnUrl 都可被直接加载。
+function normalizeSearchUrl(rawUrl) {
+    if (!rawUrl) return rawUrl;
+    try {
+        const u = new URL(rawUrl, window.location.origin);
+        if (u.pathname.startsWith('/s=')) {
+            const keyword = decodeURIComponent(u.pathname.slice(3));
+            u.pathname = '/';
+            u.searchParams.set('s', keyword);
+            return u.toString();
+        }
+    } catch (e) {
+        // 解析失败则原样返回
+    }
+    return rawUrl;
+}
+
 window.onload = function() {
     // 获取当前URL的查询参数
     const currentParams = new URLSearchParams(window.location.search);
@@ -57,7 +77,10 @@ window.onload = function() {
         // 默认回到首页
         returnUrl = '/';
     }
-    
+
+    // 规范化搜索URL: /s=keyword -> /?s=keyword,避免Worker把 /s=xxx 当静态文件拉取而404
+    returnUrl = normalizeSearchUrl(returnUrl);
+
     // 将返回URL添加到player.html的参数中
     if (!playerUrlObj.searchParams.has('returnUrl')) {
         playerUrlObj.searchParams.set('returnUrl', encodeURIComponent(returnUrl));
