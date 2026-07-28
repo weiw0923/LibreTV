@@ -3,10 +3,20 @@
 // 将 /s=keyword 路径形式的搜索URL规范化为 /?s=keyword 查询串形式。
 // 原因: CF Worker 把 /s=xxx 当静态文件去 GitHub raw 拉取 -> 404; / 永远返回 index.html,
 // 前端 index-page.js 会读取 ?s= 自动重搜。规范化后 lastPageUrl / returnUrl 都可被直接加载。
+// 逐层解码以兼容多重编码的输入(详见 player.js 同名函数注释)。
 function normalizeSearchUrl(rawUrl) {
     if (!rawUrl) return rawUrl;
+    let url = rawUrl;
+    for (let i = 0; i < 3; i++) {
+        if (/^https?:\/\//i.test(url) || url.charAt(0) === '/') break;
+        try {
+            const next = decodeURIComponent(url);
+            if (next === url) break;
+            url = next;
+        } catch (e) { break; }
+    }
     try {
-        const u = new URL(rawUrl, window.location.origin);
+        const u = new URL(url, window.location.origin);
         if (u.pathname.startsWith('/s=')) {
             const keyword = decodeURIComponent(u.pathname.slice(3));
             u.pathname = '/';
@@ -16,7 +26,7 @@ function normalizeSearchUrl(rawUrl) {
     } catch (e) {
         // 解析失败则原样返回
     }
-    return rawUrl;
+    return url;
 }
 
 window.onload = function() {

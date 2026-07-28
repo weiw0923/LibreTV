@@ -4,10 +4,22 @@ const customAPIs = JSON.parse(localStorage.getItem('customAPIs') || '[]'); // �
 // 将 /s=keyword 路径形式的搜索URL规范化为 /?s=keyword 查询串形式。
 // 原因: CF Worker 把 /s=xxx 当作静态文件去 GitHub raw 拉取 -> 404 "Not Found";
 // 而 / 永远返回 index.html,前端 index-page.js 会读取 ?s= 并自动重新执行搜索。
+// 鲁棒处理 returnUrl 的编码层数: 旧版 watch.js 曾双重编码 returnUrl, urlParams.get
+// 只解一层会拿到还编着的字符串(被 new URL 当相对路径 -> 跳 origin/https%3A... -> 404)。
+// 这里逐层解码直到拿到以 http(s):// 或 / 开头的正常URL, 再规范化。对单编/双编/正常URL都正确。
 function normalizeSearchUrl(rawUrl) {
     if (!rawUrl) return rawUrl;
+    let url = rawUrl;
+    for (let i = 0; i < 3; i++) {
+        if (/^https?:\/\//i.test(url) || url.charAt(0) === '/') break;
+        try {
+            const next = decodeURIComponent(url);
+            if (next === url) break; // 解码不动了
+            url = next;
+        } catch (e) { break; }
+    }
     try {
-        const u = new URL(rawUrl, window.location.origin);
+        const u = new URL(url, window.location.origin);
         if (u.pathname.startsWith('/s=')) {
             const keyword = decodeURIComponent(u.pathname.slice(3));
             u.pathname = '/';
@@ -17,7 +29,7 @@ function normalizeSearchUrl(rawUrl) {
     } catch (e) {
         // 解析失败则原样返回
     }
-    return rawUrl;
+    return url;
 }
 
 // 改进返回功能
