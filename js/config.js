@@ -139,6 +139,264 @@ const API_SITES = {
         api: 'https://www.iqiyizyapi.com/api.php/provide/vod',
         name: 'iqiyi资源'
     },
+    wyvod: {
+        api: 'https://www.wyvod.com/api.php/provide/vod',
+        name: 'wyvod'
+    },
+    jkunzy: {
+        api: 'https://www.jkunzyapi.com/api.php/provide/vod',
+        name: 'jkunzy'
+    },
+    heiliaozy: {
+        api: 'https://heiliaozyapi.com/api.php/provide/vod',
+        name: 'heiliaozy'
+    },
+    jusj: {
+        api: 'https://cj.jusj.top/api.php/provide/vod',
+        name: 'jusj'
+    },
+    '36717': {
+        api: 'http://www.36717.info/api.php/provide/vod',
+        name: '36717'
+    },
+    md: {
+        api: 'https://md91.cc/api.php/provide/vod',
+        name: 'md'
+    },
+    maoyan: {
+        api: 'https://api.maoyanapi.top/api.php/provide/vod',
+        name: 'maoyan'
+    },
+    chujia: {
+        api: 'http://chujia.cc/api.php/provide/vod',
+        name: 'chujia'
+    },
+    bt: {
+        api: 'http://bt4.cc/api.php/provide/vod',
+        name: 'bt'
+    },
+    xiaomaomi: {
+        api: 'http://zy.xiaomaomi.cc/api.php/provide/vod',
+        name: 'xiaomaomi'
+    },
+    ip1501099444: {
+        api: 'http://150.109.94.44:1112/api.php/provide/vod',
+        name: 'ip1501099444'
+    },
+    zitv: {
+        api: 'http://www.zitv.cc/api.php/provide/vod',
+        name: 'zitv'
+    },
+    yayazy: {
+        api: 'https://yayazy2.com/api.php/provide/vod',
+        name: 'yayazy'
+    },
+    sdzy: {
+        api: 'https://xsd.sdzyapi.com/api.php/provide/vod',
+        name: 'sdzy'
+    },
+    xingba: {
+        api: 'https://xingba222.com/api.php/provide/vod',
+        name: 'xingba'
+    },
+    moduzy: {
+        api: 'https://www.moduzy.com/api.php/provide/vod',
+        name: 'moduzy'
+    },
+    lovedan: {
+        api: 'https://www.lovedan.net/api.php/provide/vod',
+        name: 'lovedan'
+    },
+    jingpinx: {
+        api: 'https://www.jingpinx.com/api.php/provide/vod',
+        name: 'jingpinx'
+    },
+    huya: {
+        api: 'https://www.huyaapi.com/api.php/provide/vod',
+        name: 'huya'
+    },
+    thzy: {
+        api: 'https://thzy1.me/api.php/provide/vod',
+        name: 'thzy'
+    },
+    suoni: {
+        api: 'https://suoniapi.com/api.php/provide/vod',
+        name: 'suoni'
+    },
+    slapibf: {
+        api: 'https://slapibf.com/api.php/provide/vod',
+        name: 'slapibf'
+    },
+    shayu: {
+        api: 'https://shayuapi.com/api.php/provide/vod',
+        name: 'shayu'
+    },
+    senlinzy: {
+        api: 'https://senlinzy2.com/api.php/provide/vod',
+        name: 'senlinzy'
+    },
+    apiyhzy: {
+        api: 'https://m3u8.apiyhzy.com/api.php/provide/vod',
+        name: 'apiyhzy'
+    },
+    lzizy: {
+        api: 'https://lzizy1.com/api.php/provide/vod',
+        name: 'lzizy'
+    },
+    lb: {
+        api: 'https://lbapi9.com/api.php/provide/vod',
+        name: 'lb'
+    },
+    jyzy: {
+        api: 'https://jyzyapi.com/provide/vod',
+        name: 'jyzy'
+    },
+    fqzy: {
+        api: 'https://fqzy.me/api.php/provide/vod',
+        name: 'fqzy'
+    },
+    lzcaiji: {
+        api: 'https://cj.lzcaiji.com/api.php/provide/vod',
+        name: 'lzcaiji'
+    },
+    modu: {
+        api: 'https://caiji.moduapi.cc/api.php/provide/vod',
+        name: 'modu'
+    },
+    xiaojizy: {
+        api: 'https://api.xiaojizy.live/provide/vod',
+        name: 'xiaojizy'
+    },
+    wsyzy: {
+        api: 'https://api.wsyzy.net/api.php/provide/vod',
+        name: 'wsyzy'
+    },
+    niuniuzy: {
+        api: 'https://api.niuniuzy.me/api.php/provide/vod',
+        name: 'niuniuzy'
+    },
+    apilj: {
+        api: 'https://apilj.com/api.php/provide/vod',
+        name: 'apilj'
+    },
+    guangsu: {
+        api: 'https://api.guangsuapi.com/api.php/provide/vod',
+        name: 'guangsu'
+    },
+    dou: {
+        api: 'https://api.douapi.cc/api.php/provide/vod',
+        name: 'dou'
+    },
+    dd: {
+        api: 'https://api.ddapi.cc/api.php/provide/vod',
+        name: 'dd'
+    },
+    aosikazy: {
+        api: 'https://aosikazy2.com/api.php/provide/vod',
+        name: 'aosikazy'
+    },
+    '360zyzz': {
+        api: 'https://360zyzz.com/api.php/provide/vod',
+        name: '360zyzz'
+    },
+    '155': {
+        api: 'https://155api.com/api.php/provide/vod',
+        name: '155'
+    },
+    lbapiby: {
+        api: 'http://lbapiby.com/api.php/provide/vod',
+        name: 'lbapiby'
+    },
+    fh: {
+        api: 'http://fhapi9.com/api.php/provide/vod',
+        name: 'fh'
+    },
+    '11bat': {
+        api: 'http://api.11bat.com/api.php/provide/vod',
+        name: '11bat'
+    },
+    ip154219117232: {
+        api: 'http://154.219.117.232:9981/jacloudapi.php/provide/vod',
+        name: 'ip154219117232'
+    },
+    yutuzy: {
+        api: 'https://yutuzy3.com/api.php/provide/vod',
+        name: 'yutuzy'
+    },
+    apiyutu: {
+        api: 'https://apiyutu.com/api.php/provide/vod',
+        name: 'apiyutu'
+    },
+    apilsbzy: {
+        api: 'https://apilsbzy1.com/api.php/provide/vod',
+        name: 'apilsbzy'
+    },
+    naixxzy: {
+        api: 'https://Naixxzy.com/api.php/provide/vod',
+        name: 'naixxzy',
+        adult: true
+    },
+    madouse: {
+        api: 'http://www.madouse.la/api.php/provide/vod',
+        name: 'madouse',
+        adult: true
+    },
+    '91md': {
+        api: 'https://91md.me/api.php/provide/vod',
+        name: '91md',
+        adult: true
+    },
+    '9191md': {
+        api: 'http://www.9191md.me/api.php/provide/vod',
+        name: '9191md',
+        adult: true
+    },
+    lajiaozy: {
+        api: 'http://www.lajiaozy18.com/api.php/provide/vod',
+        name: 'lajiaozy',
+        adult: true
+    },
+    xxavs: {
+        api: 'https://xxavs.com/api.php/provide/vod',
+        name: 'xxavs',
+        adult: true
+    },
+    hsckzy: {
+        api: 'https://hsckzy.vip/api.php/provide/vod',
+        name: 'hsckzy',
+        adult: true
+    },
+    apidanaizi: {
+        api: 'https://apidanaizi.com/api.php/provide/vod',
+        name: 'apidanaizi',
+        adult: true
+    },
+    aibozy: {
+        api: 'https://aibozy.site/api.php/provide/vod',
+        name: 'aibozy',
+        adult: true
+    },
+    '91av': {
+        api: 'https://91av.cyou/api.php/provide/vod',
+        name: '91av',
+        adult: true
+    },
+    sex8zy: {
+        api: 'https://sex8zy7.com/api.php/provide/vod',
+        name: 'sex8zy',
+        adult: true
+    },
+    souavzyw: {
+        api: 'https://api.souavzyw.net/api.php/provide/vod',
+        name: 'souavzyw',
+        adult: true
+    },
+    souavzy: {
+        api: 'https://api.souavzy.vip/api.php/provide/vod',
+        name: 'souavzy',
+        adult: true
+    },
+
     testSource: {
         api: 'https://www.example.com/api.php/provide/vod',
         name: '空内容测试源',
